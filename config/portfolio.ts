@@ -1,5 +1,5 @@
 export const portfolioData = {
-  name: "Canonflow.exe",
+  name: "canonflow.exe",
   title: "Software Engineer - Backend",
   email: "dev.nathangarzyasantoso@gmail.com",
   github: "https://github.com/canonflow",

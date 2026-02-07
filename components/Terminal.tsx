@@ -20,9 +20,36 @@ export default function Terminal() {
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const initialMessage = (
-    <div className="text-xs text-[#D8DEE9]">
-      Type <span className="text-[#EBCB8B]">help</span> to see available
-      commands
+    <div>
+      <pre className="text-[#88C0D0] text-[0.6rem] mb-4">
+        {`
+ ██████╗ █████╗ ███╗   ██╗ ██████╗ ███╗   ██╗███████╗██╗      ██████╗ ██╗    ██╗
+██╔════╝██╔══██╗████╗  ██║██╔═══██╗████╗  ██║██╔════╝██║     ██╔═══██╗██║    ██║
+██║     ███████║██╔██╗ ██║██║   ██║██╔██╗ ██║█████╗  ██║     ██║   ██║██║ █╗ ██║
+██║     ██╔══██║██║╚██╗██║██║   ██║██║╚██╗██║██╔══╝  ██║     ██║   ██║██║███╗██║
+╚██████╗██║  ██║██║ ╚████║╚██████╔╝██║ ╚████║██║     ███████╗╚██████╔╝╚███╔███╔╝
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ 
+                                                                                  
+███████╗██╗  ██╗███████╗
+██╔════╝╚██╗██╔╝██╔════╝
+█████╗   ╚███╔╝ █████╗  
+██╔══╝   ██╔██╗ ██╔══╝  
+███████╗██╔╝ ██╗███████╗
+╚══════╝╚═╝  ╚═╝╚══════╝
+`}
+      </pre>
+      <div>
+        <div className="text-[#D8DEE9]">{portfolioData.title}</div>
+        <div className="text-[#D8DEE9] mb-4 text-xs">
+          Welcome to my corner of the internet! I'm glad you're here. -{" "}
+          {portfolioData.name} (v1.0.0)
+        </div>
+      </div>
+      <div className="text-xs text-[#D8DEE9] mb-4">
+        Type <span className="text-[#EBCB8B]">help</span> to see available
+        commands
+      </div>
+      <hr />
     </div>
   );
 
@@ -357,7 +384,7 @@ export default function Terminal() {
       onClick={() => inputRef.current?.focus()}
     >
       <div className="bg-[#3B4252] px-4 py-3 border-b border-[#434C5E]">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2">
           <div className="flex gap-2">
             <div className="w-3 h-3 rounded-full bg-[#BF616A]"></div>
             <div className="w-3 h-3 rounded-full bg-[#EBCB8B]"></div>
@@ -367,35 +394,33 @@ export default function Terminal() {
             canonflow@127.0.0.1:~
           </div>
         </div>
-        <div className={`space-y-2 ${pixelFont.className}`}>
-          <div className="text-[#88C0D0] text-sm leading-relaxed">
-            Welcome to {portfolioData.name} (v.1.0.0) - Portfolio Terminal
-          </div>
-          <div className="text-[#D8DEE9] text-xs leading-relaxed">
-            {portfolioData.title}
-          </div>
+      </div>
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="py-4 px-6 pb-0 mb-4">{initialMessage}</div>
+
+        <div
+          ref={terminalRef}
+          className="flex-1 p-4 pt-0 overflow-y-auto custom-scrollbar"
+        >
+          {history.slice(1).map((entry, i) => (
+            <div key={i} className="mb-6 px-2">
+              {entry.command && (
+                <div className="flex gap-2 mb-2 text-xs">
+                  <span className="text-[#D8DEE9]">
+                    canonflow@<span className="text-[#B48EAD]">127.0.0.1</span>:
+                    <span className="text-[#88C0D0] mx-0.5">~</span>$
+                  </span>
+                  <span className="text-[#D8DEE9]">{entry.command}</span>
+                </div>
+              )}
+              <div className="ml-4">{entry.output}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div
-        ref={terminalRef}
-        className="flex-1 p-4 overflow-y-auto custom-scrollbar"
-      >
-        {history.map((entry, i) => (
-          <div key={i} className="mb-6">
-            {entry.command && (
-              <div className="flex gap-2 mb-2 text-xs">
-                <span className="text-[#D8DEE9]">
-                  canonflow@<span className="text-[#B48EAD]">127.0.0.1</span>:
-                  <span className="text-[#88C0D0] mx-0.5">~</span>$
-                </span>
-                <span className="text-[#D8DEE9]">{entry.command}</span>
-              </div>
-            )}
-            <div className="ml-4">{entry.output}</div>
-          </div>
-        ))}
-
+      <div className="p-4 border-t border-[#434C5E]">
         <form onSubmit={handleSubmit} className="flex gap-2 text-xs">
           <span className="text-[#D8DEE9]">
             canonflow@<span className="text-[#B48EAD]">127.0.0.1</span>:
