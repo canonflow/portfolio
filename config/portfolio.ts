@@ -34,7 +34,8 @@ export const portfolioData = {
     },
     {
       name: "Gojudge",
-      description: "Golang package for competitive compiler service",
+      description:
+        "Golang package for competitive programming compiler service",
       tech: ["Go"],
       link: "https://github.com/canonflow/gojudge",
     },
