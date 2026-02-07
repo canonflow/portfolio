@@ -21,7 +21,7 @@ export default function Terminal() {
 
   const initialMessage = (
     <div>
-      <pre className="text-[#88C0D0] text-[0.6rem] mb-4">
+      <pre className="text-[#88C0D0] text-[0.45rem] sm:text-[0.6rem] mb-4">
         {`
  ██████╗ █████╗ ███╗   ██╗ ██████╗ ███╗   ██╗███████╗██╗      ██████╗ ██╗    ██╗
 ██╔════╝██╔══██╗████╗  ██║██╔═══██╗████╗  ██║██╔════╝██║     ██╔═══██╗██║    ██║
@@ -380,7 +380,7 @@ export default function Terminal() {
 
   return (
     <div
-      className="h-screen flex flex-col bg-[#2E3440] overflow-hidden"
+      className="h-dvh flex flex-col bg-[#2E3440] overflow-hidden"
       onClick={() => inputRef.current?.focus()}
     >
       <div className="bg-[#3B4252] px-4 py-3 border-b border-[#434C5E]">
