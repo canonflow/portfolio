@@ -52,13 +52,13 @@ export const portfolioData = {
       company: "Philip Morris International",
       period: "Dec 2025 - Present",
       description:
-        "Contributed to the development and maintenance of AYO Ecosystem",
+        "Contributed to the development and maintenance of AYO Ecosystems",
     },
     {
       role: "Software Engineer Intern",
       company: "PT Salam Pacific Indonesia Lines",
       period: "Aug 2025 - Dec 2025",
-      description: "Built and maintained multiple web-based software",
+      description: "Built and maintained multiple web-based softwares",
     },
   ],
 
