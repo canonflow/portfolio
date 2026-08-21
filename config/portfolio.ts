@@ -27,7 +27,7 @@ export const portfolioData = {
     {
       name: "Backend Starter - Modular Monolith",
       description:
-        "Golang backend template using with clean layered architecture, built on Fiber V3, Gorm, Redis, and Sonic for JSON Encoder-Decoder.",
+        "Golang backend template using clean layered architecture, built on Fiber V3, Gorm, Redis, and Sonic for JSON Encoder-Decoder.",
       tech: ["Golang", "Fiber", "Redis", "MySQL"],
       link: "https://github.com/canonflow/backend-starter",
     },
