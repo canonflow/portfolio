@@ -2,13 +2,20 @@
 
 import { useState, useEffect, useRef } from "react";
 import { portfolioData } from "@/config/portfolio";
-import { Press_Start_2P } from "next/font/google";
-
-const pixelFont = Press_Start_2P({ weight: "400", subsets: ["latin"] });
 
 type HistoryEntry = {
   command: string;
   output: React.ReactNode;
+};
+
+// Static class strings so Tailwind's JIT compiler can detect them.
+const accentText: Record<string, string> = {
+  mauve: "text-mauve",
+  blue: "text-blue",
+  green: "text-green",
+  peach: "text-peach",
+  sky: "text-sky",
+  pink: "text-pink",
 };
 
 export default function Terminal() {
@@ -19,9 +26,9 @@ export default function Terminal() {
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  const initialMessage = (
+  const banner = (
     <div>
-      <pre className="text-[#88C0D0] text-[0.42rem] sm:text-[0.6rem] mb-4">
+      <pre className="text-transparent bg-clip-text bg-gradient-to-r from-mauve via-pink to-sky text-[0.42rem] sm:text-[0.6rem] mb-4 leading-tight">
         {`
  ██████╗ █████╗ ███╗   ██╗ ██████╗ ███╗   ██╗███████╗██╗      ██████╗ ██╗    ██╗
 ██╔════╝██╔══██╗████╗  ██║██╔═══██╗████╗  ██║██╔════╝██║     ██╔═══██╗██║    ██║
@@ -38,322 +45,362 @@ export default function Terminal() {
 ╚══════╝╚═╝  ╚═╝╚══════╝
 `}
       </pre>
-      <div>
-        <div className="text-[#D8DEE9]">{portfolioData.title}</div>
-        <div className="text-[#D8DEE9] mb-4 text-xs">
-          Welcome to my corner of the internet! I'm glad you're here. -{" "}
-          {portfolioData.name} (v1.0.0)
+      <div className="space-y-1">
+        <div className="text-fg text-sm font-medium">{portfolioData.title}</div>
+        <div className="text-muted text-xs">
+          Welcome to my corner of the internet! I&apos;m glad you&apos;re here. —{" "}
+          <span className="text-mauve">{portfolioData.name}</span>{" "}
+          <span className="text-overlay">(v1.0.0)</span>
         </div>
       </div>
-      <div className="text-xs text-[#D8DEE9] mb-4">
-        Type <span className="text-[#EBCB8B]">help</span> to see available
-        commands
+      <div className="text-xs text-muted mt-4">
+        Type <CommandLink cmd="help" onRun={runCommand} /> to see available
+        commands.
       </div>
-      <hr />
+      <div className="mt-4 h-px bg-gradient-to-r from-surface0 via-surface2 to-transparent" />
     </div>
   );
 
   useEffect(() => {
-    setHistory([
-      {
-        command: "",
-        output: initialMessage,
-      },
-    ]);
+    setHistory([{ command: "", output: banner }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    terminalRef.current?.scrollTo(0, terminalRef.current.scrollHeight);
+    terminalRef.current?.scrollTo({
+      top: terminalRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [history]);
 
-  const commands: Record<string, () => React.ReactNode> = {
+  const commands: Record<string, (args: string[]) => React.ReactNode> = {
     help: () => (
-      <div className="space-y-1 text-xs">
-        <div className="text-[#88C0D0] mb-2">Available Commands:</div>
-        <div>
-          <span className="text-[#EBCB8B]">about</span> - Learn more about me
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">skills</span> - View my technical
-          skills
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">projects</span> - See my projects
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">experiences</span> - View my work
-          experiences
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">education</span> - See my education
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">contact</span> - Get my contact
-          information
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">resume</span> - View my resume
-        </div>
-        <div>
-          <span className="text-[#EBCB8B]">clear</span> - Clear the terminal
+      <div className="text-xs">
+        <SectionTitle>Available Commands</SectionTitle>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
+          {(
+            [
+              ["about", "Learn more about me"],
+              ["skills", "View my technical skills"],
+              ["projects", "See my projects"],
+              ["experiences", "View my work experiences"],
+              ["education", "See my education"],
+              ["contact", "Get my contact information"],
+              ["resume", "View my resume"],
+              ["whoami", "Print current user"],
+              ["ls", "List available sections"],
+              ["date", "Show the current date"],
+              ["echo", "Print text back to the screen"],
+              ["history", "Show command history"],
+              ["clear", "Clear the terminal"],
+            ] as const
+          ).map(([name, desc]) => (
+            <div key={name} className="flex items-baseline gap-2">
+              <span className="min-w-[6.5rem]">
+                <CommandLink cmd={name} onRun={runCommand} />
+              </span>
+              <span className="text-muted">{desc}</span>
+            </div>
+          ))}
         </div>
       </div>
     ),
 
     about: () => (
-      <div className="space-y-2 text-xs">
-        <div className="text-[#88C0D0] text-2xl mb-3">About Me</div>
-        <div className="text-[#D8DEE9] whitespace-pre-line leading-relaxed">
+      <div className="text-xs">
+        <SectionTitle>About Me</SectionTitle>
+        <div className="text-fg whitespace-pre-line leading-relaxed max-w-2xl">
           {portfolioData.about}
         </div>
       </div>
     ),
 
     skills: () => (
-      // <div className="space-y-2 text-xs">
-      //   <div className="text-cyan-400">Languages</div>
-      //   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-      //     {portfolioData.programmingLanguages.map((skill, i) => (
-      //       <div key={i} className="text-gray-300">
-      //         • {skill}
-      //       </div>
-      //     ))}
-      //   </div>
-      // </div>
-      <div className="space-y-2.5 text-xs">
-        {/* Languages */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">LANGUAGES</div>
-          <div className="md:col-span-3">
-            {portfolioData.programmingLanguages.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
+      <div className="text-xs space-y-3">
+        <SectionTitle>Skills</SectionTitle>
+        {(
+          [
+            ["LANGUAGES", portfolioData.programmingLanguages, "mauve"],
+            ["BACKEND", portfolioData.backends, "blue"],
+            ["DATABASE", portfolioData.databases, "green"],
+            ["INFRA", portfolioData.infra, "peach"],
+            ["VERSION CONTROL", portfolioData.versionControl, "sky"],
+            ["TOOLS", portfolioData.tools, "pink"],
+          ] as const
+        ).map(([label, items, accent]) => (
+          <div key={label} className="space-y-1.5">
+            <div className={`${accentText[accent]} text-[0.7rem] tracking-widest`}>
+              {label}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {items.map((skill, i) => (
+                <span
+                  key={i}
+                  className="inline-block bg-surface0 text-fg px-2.5 py-1 rounded-md border border-surface1 transition-colors hover:bg-surface1 hover:border-surface2"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Backends */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">BACKEND</div>
-          <div className="md:col-span-3">
-            {portfolioData.backends.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Databases */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">DATABASE</div>
-          <div className="md:col-span-3">
-            {portfolioData.databases.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* DevOps */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">INFRA</div>
-          <div className="md:col-span-3">
-            {portfolioData.infra.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Version Control */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">VERSION CONTROL</div>
-          <div className="md:col-span-3">
-            {portfolioData.versionControl.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* TOOLS */}
-        <div className="grid grid-cols-1 gap-y-2">
-          <div className="text-[#88C0D0] text-md">TOOLS</div>
-          <div className="md:col-span-3">
-            {portfolioData.tools.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block mr-2 mb-1 bg-[#5E81AC]/50 text-[#ECEFF4] px-2 py-1 font-bold rounded-sm"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
     ),
 
     projects: () => (
-      <div className="space-y-4 text-xs">
-        <div className="text-[#88C0D0]">Projects</div>
-        {portfolioData.projects.map((project, i) => (
-          <div key={i} className="space-y-1 border-l-2 border-[#5E81AC] pl-4">
-            <div className="text-[#EBCB8B]">{project.name}</div>
-            <div className="text-[#D8DEE9] leading-relaxed">
-              {project.description}
-            </div>
-            <div className="text-[#4C566A]">
-              Tech: {project.tech.join(", ")}
-            </div>
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#81A1C1] hover:underline"
+      <div className="text-xs space-y-3">
+        <SectionTitle>Projects</SectionTitle>
+        <div className="grid grid-cols-1 gap-3">
+          {portfolioData.projects.map((project, i) => (
+            <div
+              key={i}
+              className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-1.5 transition-all hover:border-mauve hover:bg-mantle"
             >
-              {project.link}
-            </a>
-          </div>
-        ))}
+              <div className="flex items-center gap-2">
+                <span className="text-mauve">▹</span>
+                <span className="text-yellow font-medium">{project.name}</span>
+              </div>
+              <div className="text-fg leading-relaxed">
+                {project.description}
+              </div>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {project.tech.map((t, j) => (
+                  <span
+                    key={j}
+                    className="bg-surface0 text-muted px-2 py-0.5 rounded text-[0.65rem]"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-blue hover:text-sky hover:underline pt-1"
+              >
+                → {project.link}
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     ),
 
     experiences: () => (
-      <div className="space-y-4 text-xs">
-        <div className="text-[#88C0D0]">Work Experience</div>
-        {portfolioData.experience.map((exp, i) => (
-          <div key={i} className="space-y-1 border-l-2 border-[#5E81AC] pl-4">
-            <div className="text-[#EBCB8B]">{exp.role}</div>
-            <div className="text-[#4C566A]">
-              {exp.company} | {exp.period}
+      <div className="text-xs space-y-3">
+        <SectionTitle>Work Experience</SectionTitle>
+        <div className="relative pl-5 space-y-4 before:absolute before:left-1 before:top-1 before:bottom-1 before:w-px before:bg-surface1">
+          {portfolioData.experience.map((exp, i) => (
+            <div key={i} className="relative space-y-1">
+              <span className="absolute -left-[1.05rem] top-1 w-2 h-2 rounded-full bg-mauve ring-2 ring-base" />
+              <div className="text-yellow font-medium">{exp.role}</div>
+              <div className="text-overlay">
+                {exp.company} <span className="text-surface2">|</span>{" "}
+                {exp.period}
+              </div>
+              <div className="text-fg leading-relaxed">{exp.description}</div>
             </div>
-            <div className="text-[#D8DEE9] leading-relaxed">
-              {exp.description}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     ),
 
     education: () => (
-      <div className="space-y-4 text-xs">
-        <div className="text-[#88C0D0]">Education</div>
+      <div className="text-xs space-y-3">
+        <SectionTitle>Education</SectionTitle>
         {portfolioData.education.map((edu, i) => (
-          <div key={i} className="space-y-1">
-            <div className="text-[#EBCB8B]">{edu.degree}</div>
-            <div className="text-[#D8DEE9]">{edu.school}</div>
-            <div className="text-[#4C566A]">{edu.year}</div>
+          <div
+            key={i}
+            className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-1"
+          >
+            <div className="text-yellow font-medium">{edu.degree}</div>
+            <div className="text-fg">{edu.school}</div>
+            <div className="text-overlay">{edu.year}</div>
           </div>
         ))}
       </div>
     ),
 
     contact: () => (
-      <div className="space-y-2 text-xs">
-        <div className="text-[#88C0D0]">Contact Information</div>
-        <div className="text-[#D8DEE9]">
-          Email:{" "}
+      <div className="text-xs space-y-2">
+        <SectionTitle>Contact</SectionTitle>
+        <ContactRow label="Email" accent="green">
           <a
             href={`mailto:${portfolioData.email}`}
-            className="text-[#81A1C1] hover:underline"
+            className="text-blue hover:text-sky hover:underline"
           >
             {portfolioData.email}
           </a>
-        </div>
-        <div className="text-[#D8DEE9]">
-          GitHub:{" "}
+        </ContactRow>
+        <ContactRow label="GitHub" accent="mauve">
           <a
             href={portfolioData.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#81A1C1] hover:underline"
+            className="text-blue hover:text-sky hover:underline"
           >
             {portfolioData.github}
           </a>
-        </div>
-        <div className="text-[#D8DEE9]">
-          LinkedIn:{" "}
+        </ContactRow>
+        <ContactRow label="LinkedIn" accent="sky">
           <a
             href={portfolioData.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#81A1C1] hover:underline"
+            className="text-blue hover:text-sky hover:underline"
           >
             {portfolioData.linkedin}
           </a>
-        </div>
+        </ContactRow>
       </div>
     ),
 
     resume: () => (
-      <div className="space-y-2 text-xs">
-        <div className="text-[#88C0D0]">Resume</div>
-        <div className="text-[#D8DEE9]">
-          <a
-            href={portfolioData.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#81A1C1] hover:underline"
-          >
-            {portfolioData.resume}
-          </a>
-        </div>
+      <div className="text-xs space-y-2">
+        <SectionTitle>Resume</SectionTitle>
+        <a
+          href={portfolioData.resume}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-md bg-surface0 border border-surface1 px-3 py-1.5 text-fg transition-colors hover:bg-surface1 hover:border-mauve"
+        >
+          <span className="text-peach">↧</span> Open resume ({portfolioData.resume})
+        </a>
+      </div>
+    ),
+
+    whoami: () => (
+      <div className="text-xs text-fg">
+        <span className="text-green">{portfolioData.name}</span>{" "}
+        <span className="text-overlay">—</span> {portfolioData.title}
+      </div>
+    ),
+
+    ls: () => (
+      <div className="text-xs grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1">
+        {[
+          "about",
+          "skills",
+          "projects",
+          "experiences",
+          "education",
+          "contact",
+          "resume",
+        ].map((item) => (
+          <span key={item} className="text-green">
+            {item}
+            <span className="text-overlay">.md</span>
+          </span>
+        ))}
+      </div>
+    ),
+
+    date: () => <div className="text-xs text-fg">{new Date().toString()}</div>,
+
+    echo: (args) => <div className="text-xs text-fg">{args.join(" ")}</div>,
+
+    history: () => (
+      <div className="text-xs text-fg space-y-0.5">
+        {commandHistory.length === 0 ? (
+          <div className="text-overlay">No commands in history yet.</div>
+        ) : (
+          commandHistory.map((cmd, i) => (
+            <div key={i}>
+              <span className="text-overlay mr-3">{i + 1}</span>
+              {cmd}
+            </div>
+          ))
+        )}
+      </div>
+    ),
+
+    sudo: (args) => (
+      <div className="text-xs text-red">
+        {args.length > 0
+          ? "Nice try. This incident will be reported. 🚨"
+          : "usage: sudo <command>"}
       </div>
     ),
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cmd = input.trim().toLowerCase();
-
-    if (!cmd) {
+  function runCommand(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) {
       setInput("");
       return;
     }
 
-    setCommandHistory((prev) => [...prev, input]);
+    const [name, ...args] = trimmed.split(/\s+/);
+    const cmd = name.toLowerCase();
+
+    setCommandHistory((prev) => [...prev, trimmed]);
     setHistoryIndex(-1);
+    setInput("");
 
     if (cmd === "clear") {
-      setHistory([{ command: "", output: initialMessage }]);
-      setInput("");
+      setHistory([{ command: "", output: banner }]);
       return;
     }
 
-    const output = commands[cmd] ? (
-      commands[cmd]()
-    ) : (
-      <div className="text-[#BF616A] text-xs">
-        Command not found: {cmd}. Type &apos;help&apos; for available commands.
-      </div>
-    );
+    let output: React.ReactNode;
+    if (commands[cmd]) {
+      output = commands[cmd](args);
+    } else {
+      const suggestions = Object.keys(commands).filter(
+        (c) => c.startsWith(cmd) || cmd.startsWith(c)
+      );
+      output = (
+        <div className="text-xs">
+          <span className="text-red">Command not found: {cmd}.</span>{" "}
+          {suggestions.length > 0 ? (
+            <span className="text-muted">
+              Did you mean{" "}
+              {suggestions.map((s, i) => (
+                <span key={s}>
+                  <CommandLink cmd={s} onRun={runCommand} />
+                  {i < suggestions.length - 1 ? ", " : ""}
+                </span>
+              ))}
+              ?
+            </span>
+          ) : (
+            <span className="text-muted">
+              Type <CommandLink cmd="help" onRun={runCommand} /> for available
+              commands.
+            </span>
+          )}
+        </div>
+      );
+    }
 
-    setHistory((prev) => [...prev, { command: input, output }]);
-    setInput("");
+    setHistory((prev) => [...prev, { command: trimmed, output }]);
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    runCommand(input);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowUp") {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      const partial = input.trim().toLowerCase();
+      if (!partial) return;
+      const matches = Object.keys(commands).filter((c) =>
+        c.startsWith(partial)
+      );
+      if (matches.length === 1) {
+        setInput(matches[0]);
+      } else if (matches.length > 1) {
+        const lcp = matches.reduce((prefix, cur) => {
+          let i = 0;
+          while (i < prefix.length && prefix[i] === cur[i]) i++;
+          return prefix.slice(0, i);
+        });
+        setInput(lcp);
+      }
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (commandHistory.length > 0) {
         const newIndex =
@@ -379,64 +426,73 @@ export default function Terminal() {
   };
 
   return (
-    <div
-      className="h-svh flex flex-col bg-[#2E3440] overflow-hidden"
-      onClick={() => inputRef.current?.focus()}
-    >
-      <div className="bg-[#3B4252] px-4 py-3 border-b border-[#434C5E]">
-        <div className="flex items-center gap-2">
+    <div className="min-h-svh w-full bg-gradient-to-br from-crust via-mantle to-base flex items-center justify-center sm:p-6">
+      <div className="flex flex-col w-full h-svh sm:h-[86vh] sm:max-w-4xl bg-base/95 backdrop-blur sm:rounded-xl overflow-hidden border border-surface0 shadow-window">
+        {/* Title bar */}
+        <div className="relative flex items-center bg-mantle px-4 py-3 border-b border-surface0">
           <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#BF616A]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#EBCB8B]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#A3BE8C]"></div>
+            <span className="w-3 h-3 rounded-full bg-red" />
+            <span className="w-3 h-3 rounded-full bg-yellow" />
+            <span className="w-3 h-3 rounded-full bg-green" />
           </div>
-          <div className="text-[#D8DEE9] text-xs ml-4">
-            canonflow@127.0.0.1:~
+          <div className="absolute left-1/2 -translate-x-1/2 text-muted text-xs flex items-center gap-2">
+            <span className="text-overlay">◈</span>
+            canonflow@127.0.0.1: ~
           </div>
         </div>
-      </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="py-4 px-6 pb-0 mb-4">{initialMessage}</div>
-
+        {/* Output */}
         <div
           ref={terminalRef}
-          className="flex-1 p-4 pt-0 overflow-y-auto custom-scrollbar"
+          className="flex-1 p-4 sm:p-6 overflow-y-auto custom-scrollbar"
+          onClick={() => inputRef.current?.focus()}
         >
-          {history.slice(1).map((entry, i) => (
-            <div key={i} className="mb-6 px-2">
+          {history.map((entry, i) => (
+            <div key={i} className="mb-6 fade-in">
               {entry.command && (
-                <div className="flex gap-2 mb-2 text-xs">
-                  <span className="text-[#D8DEE9]">
-                    canonflow@<span className="text-[#B48EAD]">127.0.0.1</span>:
-                    <span className="text-[#88C0D0] mx-0.5">~</span>$
-                  </span>
-                  <span className="text-[#D8DEE9]">{entry.command}</span>
+                <div className="mb-2">
+                  <Prompt />
+                  <span className="text-xs ml-2">{entry.command}</span>
                 </div>
               )}
-              <div className="ml-4">{entry.output}</div>
+              <div className={entry.command ? "ml-1" : ""}>{entry.output}</div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="p-4 border-t border-[#434C5E]">
-        <form onSubmit={handleSubmit} className="flex gap-2 text-xs">
-          <span className="text-[#D8DEE9]">
-            canonflow@<span className="text-[#B48EAD]">127.0.0.1</span>:
-            <span className="text-[#88C0D0] mx-0.5">~</span>$
-          </span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent outline-none text-[#D8DEE9] caret-block"
-            autoFocus
-            spellCheck={false}
-          />
-        </form>
+        {/* Input */}
+        <div className="border-t border-surface0 bg-mantle/50">
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center gap-2 px-4 py-3 text-xs"
+          >
+            <Prompt />
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-transparent outline-none text-fg caret-block"
+              autoFocus
+              spellCheck={false}
+              autoComplete="off"
+              aria-label="Terminal command input"
+            />
+          </form>
+          {/* Status / hints bar */}
+          <div className="flex items-center justify-between px-4 py-1.5 border-t border-surface0/60 text-[0.65rem] text-overlay">
+            <span className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-green inline-block animate-pulse" />
+              online
+            </span>
+            <span className="hidden sm:inline">
+              <kbd className="text-muted">Tab</kbd> autocomplete ·{" "}
+              <kbd className="text-muted">↑↓</kbd> history ·{" "}
+              <kbd className="text-muted">help</kbd> for commands
+            </span>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -444,20 +500,93 @@ export default function Terminal() {
           width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #2e3440;
+          background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #5e81ac;
+          background: #45475a;
           border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #81a1c1;
+          background: #6c7086;
         }
         .caret-block {
-          caret-color: #88c0d0;
+          caret-color: #cba6f7;
           caret-shape: block;
+        }
+        .fade-in {
+          animation: fadeIn 0.25s ease-out;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>
+  );
+}
+
+function Prompt() {
+  return (
+    <span className="text-xs whitespace-nowrap select-none">
+      <span className="text-green">canonflow</span>
+      <span className="text-overlay"> in </span>
+      <span className="text-sky">~</span>
+      <span className="text-mauve"> ❯</span>
+    </span>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <span className="text-mauve">#</span>
+      <span className="text-sky font-semibold tracking-wide">{children}</span>
+      <span className="flex-1 h-px bg-surface0" />
+    </div>
+  );
+}
+
+function ContactRow({
+  label,
+  accent,
+  children,
+}: {
+  label: string;
+  accent: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-baseline gap-2">
+      <span className={`${accentText[accent]} min-w-[4.5rem]`}>{label}</span>
+      <span className="text-overlay">:</span>
+      {children}
+    </div>
+  );
+}
+
+function CommandLink({
+  cmd,
+  onRun,
+}: {
+  cmd: string;
+  onRun: (cmd: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onRun(cmd);
+      }}
+      className="text-yellow hover:text-peach hover:underline focus:outline-none focus:underline"
+    >
+      {cmd}
+    </button>
   );
 }

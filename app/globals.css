@@ -2,10 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 @layer base {
   body {
-    @apply bg-[#2E3440] text-[#D8DEE9] font-mono;
+    @apply bg-crust text-fg;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
