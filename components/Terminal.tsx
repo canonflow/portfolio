@@ -549,10 +549,10 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-svh w-full bg-gradient-to-br from-crust via-mantle to-base flex items-center justify-center sm:p-6">
-      <div className="flex flex-col w-full h-svh sm:h-[86vh] sm:max-w-4xl bg-base/95 backdrop-blur sm:rounded-xl overflow-hidden border border-surface0 shadow-window">
+    <div className="app-min-h w-full bg-gradient-to-br from-crust via-mantle to-base flex items-center justify-center sm:p-6">
+      <div className="flex flex-col w-full app-h sm:h-[86vh] sm:max-w-4xl bg-base/95 backdrop-blur sm:rounded-xl overflow-hidden border border-surface0 shadow-window">
         {/* Title bar */}
-        <div className="relative flex items-center bg-mantle px-4 py-3 border-b border-surface0">
+        <div className="relative flex items-center bg-mantle px-4 py-3 pt-safe sm:pt-3 border-b border-surface0">
           <div className="flex gap-2">
             <span className="w-3 h-3 rounded-full bg-red" />
             <span className="w-3 h-3 rounded-full bg-yellow" />
@@ -584,7 +584,7 @@ export default function Terminal() {
         </div>
 
         {/* Input */}
-        <div className="border-t border-surface0 bg-mantle/50">
+        <div className="border-t border-surface0 bg-mantle/50 pb-safe">
           <form
             onSubmit={handleSubmit}
             className="flex items-center gap-2 px-4 py-3 text-xs"

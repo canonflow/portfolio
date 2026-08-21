@@ -5,8 +5,38 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
   body {
     @apply bg-crust text-fg;
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    /* Prevent the whole page from bouncing/scrolling behind the terminal shell
+       on mobile browsers where the address bar changes the viewport height. */
+    overscroll-behavior: none;
+  }
+}
+
+@layer utilities {
+  /* Full viewport height that tracks the *visible* area on mobile browsers
+     (accounting for the dynamic address bar), with a static fallback for
+     browsers that don't support the dvh unit. */
+  .app-h {
+    height: 100vh;
+    height: 100dvh;
+  }
+  .app-min-h {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Respect device safe areas (notch / home indicator) */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
