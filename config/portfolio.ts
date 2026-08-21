@@ -7,8 +7,11 @@ export const portfolioData = {
   resume: "/resume.pdf",
 
   about: `
-  Hi There, I'm Nathan Garzya Santoso, an ordinary Software Engineer with a strong interest in Backend Development and Software Engineering. Passionated about building scalable, efficient, and reliable server-side systems, including APIs, Databases, and Backend Architectures.\n
-  Experienced in web development with focus on backend technologies, system integration, and data management. Continuously learning modern backend framework, system design, and best practice to grow as a backend engineer and contribute to impactful, real-world projects.
+  Hi There, I'm Nathan Garzya Santoso, a Software Engineer with a strong interest in Backend Engineering, Distributed Systems, and Scalable Architecture.\n
+  I enjoy designing and building backend systems that are reliable, efficient, and capable of handling growing workloads. My interests include distributed systems, system design, event-driven architecture, database optimization, and building scalable APIs and services.
+  I'm continuously exploring system design concepts and modern backend architectures to deepen my understanding of how reliable and scalable systems are built.\n
+
+  Currently, I'm focused on growing as a Backend Engineer with a long-term interest in designing distributed and scalable systems that solve real-world problems.
   `,
 
   programmingLanguages: ["Go", "PHP", "Typescript", "Python", "C#", "Kotlin"],
@@ -20,23 +23,37 @@ export const portfolioData = {
 
   projects: [
     {
-      name: "Golang Clean Architecture",
+      name: "Backend Starter - Modular Monolith",
+      description:
+        "Golang backend template using with clean layered architecture, built on Fiber V3, Gorm, Redis, and Sonic for JSON Encoder-Decoder.",
+      tech: ["Golang", "Fiber", "Redis", "MySQL"],
+      link: "https://github.com/canonflow/backend-starter",
+    },
+    {
+      name: "Backend Starter - Hexagonal Architecture with Domain-Driven Design",
       description:
         "Golang backend template using Hexagonal Architecture, Domain-driven Design, and Kafka messaging integration",
-      tech: ["Go", "Gin", "MySQL", "Kafka", "Docker"],
+      tech: ["Golang", "Gin", "MySQL", "Kafka", "Docker", "Redis"],
+      link: "https://github.com/canonflow/canonflow-go-ddd",
+    },
+    {
+      name: "Saga Pattern Simulation",
+      description:
+        "Simulation of the Saga pattern for managing distributed transactions across microservices, demonstrating both orchestration and choreography approaches with compensating actions to maintain data consistency.",
+      tech: ["Golang", "Kafka", "Design Pattern"],
       link: "https://github.com/canonflow/canonflow-go-ddd",
     },
     {
       name: "Golang Backend Template",
       description: "Golang backend template with layered architecture design",
-      tech: ["Go", "Gin", "MySQL"],
+      tech: ["Golang", "Gin", "MySQL"],
       link: "https://github.com/canonflow/canonflow-go-backend-template",
     },
     {
       name: "Gojudge",
       description:
         "Golang package for competitive programming compiler service",
-      tech: ["Go"],
+      tech: ["Golang"],
       link: "https://github.com/canonflow/gojudge",
     },
     {
@@ -49,11 +66,18 @@ export const portfolioData = {
 
   experience: [
     {
+      role: "Software Engineer, Backend",
+      company: "Philip Morris International",
+      period: "Jun 2025 - Present",
+      description:
+        "Building AYO B2B Ecosystems for KSA (Kingdom of Saudi Arabia) and ID (Indonesia)",
+    },
+    {
       role: "Software Engineer Intern",
       company: "Philip Morris International",
-      period: "Dec 2025 - Present",
+      period: "Dec 2025 - May 26",
       description:
-        "Contributed to the development and maintenance of AYO Ecosystems",
+        "Contributed to the development and maintenance of AYO B2B Ecosystems",
     },
     {
       role: "Software Engineer Intern",
