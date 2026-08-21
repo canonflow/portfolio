@@ -43,7 +43,7 @@ export const portfolioData = {
       description:
         "Simulation of the Saga pattern for managing distributed transactions across microservices, demonstrating both orchestration and choreography approaches with compensating actions to maintain data consistency.",
       tech: ["Golang", "Kafka", "Design Pattern"],
-      link: "https://github.com/canonflow/canonflow-go-ddd",
+      link: "https://github.com/canonflow/saga-pattern-go",
     },
     {
       name: "Golang Backend Template",
