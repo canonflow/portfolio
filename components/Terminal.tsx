@@ -2,6 +2,36 @@
 
 import { useState, useEffect, useRef } from "react";
 import { portfolioData } from "@/config/portfolio";
+import type { IconType } from "react-icons";
+import {
+  SiGo,
+  SiPhp,
+  SiTypescript,
+  SiPython,
+  SiKotlin,
+  SiDotnet,
+  SiGin,
+  SiLaravel,
+  SiExpress,
+  SiFastapi,
+  SiMysql,
+  SiPostgresql,
+  SiMariadb,
+  SiRedis,
+  SiApachekafka,
+  SiRabbitmq,
+  SiDigitalocean,
+  SiDocker,
+  SiNginx,
+  SiGithub,
+  SiBitbucket,
+  SiInsomnia,
+  SiNotion,
+  SiJira,
+  SiConfluence,
+} from "react-icons/si";
+import { FaAws } from "react-icons/fa";
+import { FiLayers, FiBox } from "react-icons/fi";
 
 type HistoryEntry = {
   command: string;
@@ -16,6 +46,40 @@ const accentText: Record<string, string> = {
   peach: "text-peach",
   sky: "text-sky",
   pink: "text-pink",
+  yellow: "text-yellow",
+};
+
+// Icon + brand color per skill. Colors are tuned to stay readable on the dark
+// background. C# uses the .NET mark and Fiber falls back to a generic icon
+// since neither has a dedicated brand logo in the icon set.
+const skillMeta: Record<string, { icon: IconType; color: string }> = {
+  Go: { icon: SiGo, color: "#00ADD8" },
+  PHP: { icon: SiPhp, color: "#8B93C9" },
+  Typescript: { icon: SiTypescript, color: "#3178C6" },
+  Python: { icon: SiPython, color: "#FFD43B" },
+  "C#": { icon: SiDotnet, color: "#A97BFF" },
+  Kotlin: { icon: SiKotlin, color: "#A97BFF" },
+  Gin: { icon: SiGin, color: "#00ACD7" },
+  Fiber: { icon: FiLayers, color: "#00ACD7" },
+  Laravel: { icon: SiLaravel, color: "#FF2D20" },
+  Express: { icon: SiExpress, color: "#CDD6F4" },
+  FastAPI: { icon: SiFastapi, color: "#25C2A0" },
+  MySQL: { icon: SiMysql, color: "#5B8FB0" },
+  PostgreSQL: { icon: SiPostgresql, color: "#6C8EDB" },
+  MariaDB: { icon: SiMariadb, color: "#C0765A" },
+  Redis: { icon: SiRedis, color: "#FF4438" },
+  Kafka: { icon: SiApachekafka, color: "#CDD6F4" },
+  RabbitMQ: { icon: SiRabbitmq, color: "#FF6600" },
+  AWS: { icon: FaAws, color: "#FF9900" },
+  DigitalOcean: { icon: SiDigitalocean, color: "#3B82F6" },
+  Docker: { icon: SiDocker, color: "#2496ED" },
+  Nginx: { icon: SiNginx, color: "#4CB050" },
+  Github: { icon: SiGithub, color: "#CDD6F4" },
+  "Bit Bucket": { icon: SiBitbucket, color: "#2684FF" },
+  Insomnia: { icon: SiInsomnia, color: "#9B5DE5" },
+  Notion: { icon: SiNotion, color: "#CDD6F4" },
+  Jira: { icon: SiJira, color: "#2684FF" },
+  Confluence: { icon: SiConfluence, color: "#2684FF" },
 };
 
 export default function Terminal() {
@@ -50,7 +114,7 @@ export default function Terminal() {
         <div className="text-muted text-xs">
           Welcome to my corner of the internet! I&apos;m glad you&apos;re here. —{" "}
           <span className="text-mauve">{portfolioData.name}</span>{" "}
-          <span className="text-overlay">(v1.0.0)</span>
+          <span className="text-overlay">({portfolioData.version})</span>
         </div>
       </div>
       <div className="text-xs text-muted mt-4">
@@ -118,32 +182,35 @@ export default function Terminal() {
     skills: () => (
       <div className="text-xs space-y-3">
         <SectionTitle>Skills</SectionTitle>
-        {(
-          [
-            ["LANGUAGES", portfolioData.programmingLanguages, "mauve"],
-            ["BACKEND", portfolioData.backends, "blue"],
-            ["DATABASE", portfolioData.databases, "green"],
-            ["INFRA", portfolioData.infra, "peach"],
-            ["VERSION CONTROL", portfolioData.versionControl, "sky"],
-            ["TOOLS", portfolioData.tools, "pink"],
-          ] as const
-        ).map(([label, items, accent]) => (
-          <div key={label} className="space-y-1.5">
-            <div className={`${accentText[accent]} text-[0.7rem] tracking-widest`}>
-              {label}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {(
+            [
+              ["LANGUAGES", portfolioData.programmingLanguages, "mauve"],
+              ["BACKEND", portfolioData.backends, "blue"],
+              ["DATABASE", portfolioData.databases, "green"],
+              ["MESSAGE BROKER", portfolioData.messageBrokers, "yellow"],
+              ["INFRA", portfolioData.infra, "peach"],
+              ["VERSION CONTROL", portfolioData.versionControl, "sky"],
+              ["TOOLS", portfolioData.tools, "pink"],
+            ] as const
+          ).map(([label, items, accent]) => (
+            <div
+              key={label}
+              className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-2 transition-colors hover:border-surface2"
+            >
+              <div
+                className={`${accentText[accent]} text-[0.7rem] tracking-widest`}
+              >
+                {label}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {items.map((skill, i) => (
+                  <SkillChip key={i} name={skill} />
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {items.map((skill, i) => (
-                <span
-                  key={i}
-                  className="inline-block bg-surface0 text-fg px-2.5 py-1 rounded-md border border-surface1 transition-colors hover:bg-surface1 hover:border-surface2"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     ),
 
@@ -212,11 +279,67 @@ export default function Terminal() {
         {portfolioData.education.map((edu, i) => (
           <div
             key={i}
-            className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-1"
+            className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-3"
           >
-            <div className="text-yellow font-medium">{edu.degree}</div>
-            <div className="text-fg">{edu.school}</div>
-            <div className="text-overlay">{edu.year}</div>
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div>
+                <div className="text-yellow font-medium">{edu.degree}</div>
+                <div className="text-fg">{edu.school}</div>
+                <div className="text-overlay">{edu.year}</div>
+              </div>
+              {edu.gpa && (
+                <div className="text-right">
+                  <span className="text-overlay">GPA </span>
+                  <span className="text-green font-semibold">{edu.gpa}</span>
+                </div>
+              )}
+            </div>
+
+            {edu.thesis && (
+              <div>
+                <span className="text-sky">Thesis: </span>
+                <span className="text-fg leading-relaxed">{edu.thesis}</span>
+              </div>
+            )}
+
+            {edu.coursework && edu.coursework.length > 0 && (
+              <div className="space-y-1.5">
+                <div className="text-sky">Relevant Coursework</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {edu.coursework.map((course, j) => (
+                    <span
+                      key={j}
+                      className="bg-surface0 text-muted px-2 py-0.5 rounded text-[0.65rem]"
+                    >
+                      {course}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {edu.achievements && edu.achievements.length > 0 && (
+              <div className="space-y-1">
+                <div className="text-sky">Achievements</div>
+                <ul className="space-y-0.5">
+                  {edu.achievements.map((item, j) => (
+                    <li key={j} className="flex gap-2 text-fg leading-relaxed">
+                      <span className="text-peach shrink-0">★</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {edu.activities && (
+              <div>
+                <span className="text-sky">Activities: </span>
+                <span className="text-fg leading-relaxed">
+                  {edu.activities}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -538,6 +661,22 @@ function Prompt() {
       <span className="text-overlay"> in </span>
       <span className="text-sky">~</span>
       <span className="text-mauve"> ❯</span>
+    </span>
+  );
+}
+
+function SkillChip({ name }: { name: string }) {
+  const meta = skillMeta[name];
+  const Icon = meta?.icon ?? FiBox;
+  const color = meta?.color ?? "#a6adc8";
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-surface0 border border-surface1 rounded-md px-2.5 py-1 text-fg transition-all hover:bg-surface1 hover:border-surface2 hover:-translate-y-0.5">
+      <Icon
+        style={{ color }}
+        className="text-[0.95rem] shrink-0"
+        aria-hidden
+      />
+      {name}
     </span>
   );
 }

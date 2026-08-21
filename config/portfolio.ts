@@ -5,6 +5,7 @@ export const portfolioData = {
   github: "https://github.com/canonflow",
   linkedin: "https://linkedin.com/in/nathan-garzya-santoso-3209bb212",
   resume: "/resume.pdf",
+  version: "v2.0.0",
 
   about: `
   Hi There, I'm Nathan Garzya Santoso, a Software Engineer with a strong interest in Backend Engineering, Distributed Systems, and Scalable Architecture.\n
@@ -16,7 +17,8 @@ export const portfolioData = {
 
   programmingLanguages: ["Go", "PHP", "Typescript", "Python", "C#", "Kotlin"],
   backends: ["Gin", "Fiber", "Laravel", "Express", "FastAPI"],
-  databases: ["MySQL", "PostgreSQL", "MariaDB"],
+  databases: ["MySQL", "PostgreSQL", "MariaDB", "Redis"],
+  messageBrokers: ["Kafka", "RabbitMQ"],
   infra: ["AWS", "DigitalOcean", "Docker", "Nginx"],
   versionControl: ["Github", "Bit Bucket"],
   tools: ["Insomnia", "Notion", "Jira", "Confluence"],
@@ -92,6 +94,28 @@ export const portfolioData = {
       degree: "Bachelor of Computing",
       school: "University of Surabaya",
       year: "2026",
+      gpa: "3.974 / 4.00",
+      thesis:
+        "Implementation of Siamese Neural Network Method for Automatic Scoring of Hand-Drawn Sketch Images of Real Objects.",
+      coursework: [
+        "Algorithm and Programming",
+        "Computer Organization and Architecture",
+        "Operating System",
+        "Database",
+        "Data Structure",
+        "Computer Network",
+        "Software Engineering",
+        "Distributed Programming",
+        "Web Framework Programming",
+      ],
+      achievements: [
+        "1st Place Algorithm and Programming Student Challenge 2022/2023",
+        "3rd Place Object Oriented Programming Student Challenge 2022/2023",
+        "1st Place Database Student Challenge 2023/2024",
+        "Gemastik XV and XVI Competitive Programming Participant",
+      ],
+      activities:
+        "Participated in various UBAYA committees such as Maniac, MOB Universitas, ILPC, MOBFT, Industrial Games, and has been a member/coordinator of IT Division.",
     },
   ],
 };
