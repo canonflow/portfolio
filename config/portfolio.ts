@@ -25,6 +25,13 @@ export const portfolioData = {
 
   projects: [
     {
+      name: "Golang Queue",
+      description:
+        "A Laravel-style, type-safe job queue for Go with typed job dispatch, pluggable backend drivers (Redis Streams), retries with backoff, delayed jobs, chaining, batching, and middleware.",
+      tech: ["Golang", "Redis", "Generics"],
+      link: "https://github.com/canonflow/golang-queue"
+    },
+    {
       name: "Backend Starter - Modular Monolith",
       description:
         "Golang backend template using clean layered architecture, built on Fiber V3, Gorm, Redis, and Sonic for JSON Encoder-Decoder.",
