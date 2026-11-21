@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { portfolioData } from "@/config/portfolio";
 import type { IconType } from "react-icons";
+import type { AwsIconComponent } from "@aws-icons/react";
 import {
   SiGo,
   SiPhp,
@@ -30,6 +31,26 @@ import {
   SiJira,
   SiConfluence,
 } from "react-icons/si";
+import {
+  AmazonEc2,
+  AmazonElasticContainerService,
+  AwsLambda,
+  AmazonSimpleStorageService,
+  AmazonRds,
+  AmazonDynamoDb,
+  AmazonSimpleQueueService,
+  AmazonSimpleNotificationService,
+  AmazonEventBridge,
+  AwsStepFunctions,
+  AmazonCloudWatch,
+  AmazonApiGateway,
+  AwsCloudMap,
+} from "@aws-icons/react/architecture-service";
+import {
+  ElasticLoadBalancingApplicationLoadBalancer,
+  AwsIdentityAccessManagementRole,
+  AwsIdentityAccessManagementPermissions,
+} from "@aws-icons/react/resource";
 import { FaAws } from "react-icons/fa";
 import { FiLayers, FiBox } from "react-icons/fi";
 
@@ -49,37 +70,60 @@ const accentText: Record<string, string> = {
   yellow: "text-yellow",
 };
 
+type IconMeta =
+  | { kind: "react-icon"; icon: IconType; color: string }
+  | { kind: "aws"; icon: AwsIconComponent; color?: string };
+
 // Icon + brand color per skill. Colors are tuned to stay readable on the dark
 // background. C# uses the .NET mark and Fiber falls back to a generic icon
 // since neither has a dedicated brand logo in the icon set.
-const skillMeta: Record<string, { icon: IconType; color: string }> = {
-  Go: { icon: SiGo, color: "#00ADD8" },
-  PHP: { icon: SiPhp, color: "#8B93C9" },
-  Typescript: { icon: SiTypescript, color: "#3178C6" },
-  Python: { icon: SiPython, color: "#FFD43B" },
-  "C#": { icon: SiDotnet, color: "#A97BFF" },
-  Kotlin: { icon: SiKotlin, color: "#A97BFF" },
-  Gin: { icon: SiGin, color: "#00ACD7" },
-  Fiber: { icon: FiLayers, color: "#00ACD7" },
-  Laravel: { icon: SiLaravel, color: "#FF2D20" },
-  Express: { icon: SiExpress, color: "#CDD6F4" },
-  FastAPI: { icon: SiFastapi, color: "#25C2A0" },
-  MySQL: { icon: SiMysql, color: "#5B8FB0" },
-  PostgreSQL: { icon: SiPostgresql, color: "#6C8EDB" },
-  MariaDB: { icon: SiMariadb, color: "#C0765A" },
-  Redis: { icon: SiRedis, color: "#FF4438" },
-  Kafka: { icon: SiApachekafka, color: "#CDD6F4" },
-  RabbitMQ: { icon: SiRabbitmq, color: "#FF6600" },
-  AWS: { icon: FaAws, color: "#FF9900" },
-  DigitalOcean: { icon: SiDigitalocean, color: "#3B82F6" },
-  Docker: { icon: SiDocker, color: "#2496ED" },
-  Nginx: { icon: SiNginx, color: "#4CB050" },
-  Github: { icon: SiGithub, color: "#CDD6F4" },
-  "Bit Bucket": { icon: SiBitbucket, color: "#2684FF" },
-  Insomnia: { icon: SiInsomnia, color: "#9B5DE5" },
-  Notion: { icon: SiNotion, color: "#CDD6F4" },
-  Jira: { icon: SiJira, color: "#2684FF" },
-  Confluence: { icon: SiConfluence, color: "#2684FF" },
+const skillMeta: Record<string, IconMeta> = {
+  Go: { icon: SiGo, color: "#00ADD8", kind: "react-icon" },
+  PHP: { icon: SiPhp, color: "#8B93C9", kind: "react-icon" },
+  Typescript: { icon: SiTypescript, color: "#3178C6", kind: "react-icon" },
+  Python: { icon: SiPython, color: "#FFD43B", kind: "react-icon" },
+  "C#": { icon: SiDotnet, color: "#A97BFF", kind: "react-icon" },
+  Kotlin: { icon: SiKotlin, color: "#A97BFF", kind: "react-icon" },
+  Gin: { icon: SiGin, color: "#00ACD7", kind: "react-icon" },
+  Fiber: { icon: FiLayers, color: "#00ACD7", kind: "react-icon" },
+  Laravel: { icon: SiLaravel, color: "#FF2D20", kind: "react-icon" },
+  Express: { icon: SiExpress, color: "#CDD6F4", kind: "react-icon" },
+  FastAPI: { icon: SiFastapi, color: "#25C2A0", kind: "react-icon" },
+  MySQL: { icon: SiMysql, color: "#5B8FB0", kind: "react-icon" },
+  PostgreSQL: { icon: SiPostgresql, color: "#6C8EDB", kind: "react-icon" },
+  MariaDB: { icon: SiMariadb, color: "#C0765A", kind: "react-icon" },
+  Redis: { icon: SiRedis, color: "#FF4438", kind: "react-icon" },
+  Kafka: { icon: SiApachekafka, color: "#CDD6F4", kind: "react-icon" },
+  RabbitMQ: { icon: SiRabbitmq, color: "#FF6600", kind: "react-icon" },
+  AWS: { icon: FaAws, color: "#FF9900", kind: "react-icon" },
+  DigitalOcean: { icon: SiDigitalocean, color: "#3B82F6", kind: "react-icon" },
+  Docker: { icon: SiDocker, color: "#2496ED", kind: "react-icon" },
+  Nginx: { icon: SiNginx, color: "#4CB050", kind: "react-icon" },
+  Github: { icon: SiGithub, color: "#CDD6F4", kind: "react-icon" },
+  "Bit Bucket": { icon: SiBitbucket, color: "#2684FF", kind: "react-icon" },
+  Insomnia: { icon: SiInsomnia, color: "#9B5DE5", kind: "react-icon" },
+  Notion: { icon: SiNotion, color: "#CDD6F4", kind: "react-icon" },
+  Jira: { icon: SiJira, color: "#2684FF", kind: "react-icon" },
+  Confluence: { icon: SiConfluence, color: "#2684FF", kind: "react-icon" },
+};
+
+const awsServiceIcons: Record<string, IconMeta> = {
+  EC2: { kind: "aws", icon: AmazonEc2 },
+  ECS: { kind: "aws", icon: AmazonElasticContainerService },
+  Lambda: { kind: "aws", icon: AwsLambda },
+  S3: { kind: "aws", icon: AmazonSimpleStorageService },
+  RDS: { kind: "aws", icon: AmazonRds },
+  DynamoDB: { kind: "aws", icon: AmazonDynamoDb },
+  SQS: { kind: "aws", icon: AmazonSimpleQueueService },
+  SNS: { kind: "aws", icon: AmazonSimpleNotificationService },
+  EventBridge: { kind: "aws", icon: AmazonEventBridge },
+  "Step Functions": { kind: "aws", icon: AwsStepFunctions },
+  CloudWatch: { kind: "aws", icon: AmazonCloudWatch },
+  "API Gateway": { kind: "aws", icon: AmazonApiGateway },
+  "Cloud Map": { kind: "aws", icon: AwsCloudMap },
+  ALB: { kind: "aws", icon: ElasticLoadBalancingApplicationLoadBalancer },
+  "IAM Role": { kind: "aws", icon: AwsIdentityAccessManagementRole },
+  "IAM Policy": { kind: "aws", icon: AwsIdentityAccessManagementPermissions },
 };
 
 export default function Terminal() {
@@ -112,8 +156,8 @@ export default function Terminal() {
       <div className="space-y-1">
         <div className="text-fg text-sm font-medium">{portfolioData.title}</div>
         <div className="text-muted text-xs">
-          Welcome to my corner of the internet! I&apos;m glad you&apos;re here. —{" "}
-          <span className="text-mauve">{portfolioData.name}</span>{" "}
+          Welcome to my corner of the internet! I&apos;m glad you&apos;re here.
+          — <span className="text-mauve">{portfolioData.name}</span>{" "}
           <span className="text-overlay">({portfolioData.version})</span>
         </div>
       </div>
@@ -146,6 +190,7 @@ export default function Terminal() {
             [
               ["about", "Learn more about me"],
               ["skills", "View my technical skills"],
+              ["aws", "View the AWS services I use"],
               ["projects", "See my projects"],
               ["experiences", "View my work experiences"],
               ["education", "See my education"],
@@ -185,15 +230,30 @@ export default function Terminal() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {(
             [
-              ["LANGUAGES", portfolioData.programmingLanguages, "mauve"],
-              ["BACKEND", portfolioData.backends, "blue"],
-              ["DATABASE", portfolioData.databases, "green"],
-              ["MESSAGE BROKER", portfolioData.messageBrokers, "yellow"],
-              ["INFRA", portfolioData.infra, "peach"],
-              ["VERSION CONTROL", portfolioData.versionControl, "sky"],
-              ["TOOLS", portfolioData.tools, "pink"],
+              [
+                "LANGUAGES",
+                portfolioData.programmingLanguages,
+                "mauve",
+                skillMeta,
+              ],
+              ["BACKEND", portfolioData.backends, "blue", skillMeta],
+              ["DATABASE", portfolioData.databases, "green", skillMeta],
+              [
+                "MESSAGE BROKER",
+                portfolioData.messageBrokers,
+                "yellow",
+                skillMeta,
+              ],
+              ["INFRA", portfolioData.infra, "peach", skillMeta],
+              [
+                "VERSION CONTROL",
+                portfolioData.versionControl,
+                "sky",
+                skillMeta,
+              ],
+              ["TOOLS", portfolioData.tools, "pink", skillMeta],
             ] as const
-          ).map(([label, items, accent]) => (
+          ).map(([label, items, accent, resource]) => (
             <div
               key={label}
               className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-2 transition-colors hover:border-surface2"
@@ -205,7 +265,7 @@ export default function Terminal() {
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {items.map((skill, i) => (
-                  <SkillChip key={i} name={skill} />
+                  <SkillChip key={i} name={skill} resource={resource} />
                 ))}
               </div>
             </div>
@@ -388,7 +448,8 @@ export default function Terminal() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-md bg-surface0 border border-surface1 px-3 py-1.5 text-fg transition-colors hover:bg-surface1 hover:border-mauve"
         >
-          <span className="text-peach">↧</span> Open resume ({portfolioData.resume})
+          <span className="text-peach">↧</span> Open resume (
+          {portfolioData.resume})
         </a>
       </div>
     ),
@@ -405,6 +466,7 @@ export default function Terminal() {
         {[
           "about",
           "skills",
+          "aws",
           "projects",
           "experiences",
           "education",
@@ -445,6 +507,26 @@ export default function Terminal() {
           : "usage: sudo <command>"}
       </div>
     ),
+
+    aws: () => (
+      <div className="text-xs space-y-3">
+        <SectionTitle>AWS Services</SectionTitle>
+        <div className="rounded-lg bg-mantle/60 border border-surface0 p-3 space-y-2 transition-colors hover:border-surface2">
+          <div className="text-peach text-[0.7rem] tracking-widest">
+            {portfolioData.awsServices.length} SERVICES
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {portfolioData.awsServices.map((service) => (
+              <SkillChip
+                key={service}
+                name={service}
+                resource={awsServiceIcons}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
   };
 
   function runCommand(raw: string) {
@@ -471,7 +553,7 @@ export default function Terminal() {
       output = commands[cmd](args);
     } else {
       const suggestions = Object.keys(commands).filter(
-        (c) => c.startsWith(cmd) || cmd.startsWith(c)
+        (c) => c.startsWith(cmd) || cmd.startsWith(c),
       );
       output = (
         <div className="text-xs">
@@ -511,7 +593,7 @@ export default function Terminal() {
       const partial = input.trim().toLowerCase();
       if (!partial) return;
       const matches = Object.keys(commands).filter((c) =>
-        c.startsWith(partial)
+        c.startsWith(partial),
       );
       if (matches.length === 1) {
         setInput(matches[0]);
@@ -665,17 +747,41 @@ function Prompt() {
   );
 }
 
-function SkillChip({ name }: { name: string }) {
-  const meta = skillMeta[name];
-  const Icon = meta?.icon ?? FiBox;
+function SkillChip({
+  name,
+  resource,
+}: {
+  name: string;
+  resource: Record<string, IconMeta>;
+}) {
+  const meta = resource[name];
   const color = meta?.color ?? "#a6adc8";
-  return (
-    <span className="inline-flex items-center gap-1.5 bg-surface0 border border-surface1 rounded-md px-2.5 py-1 text-fg transition-all hover:bg-surface1 hover:border-surface2 hover:-translate-y-0.5">
-      <Icon
-        style={{ color }}
-        className="text-[0.95rem] shrink-0"
+
+  let iconNode: React.ReactNode;
+  if (meta?.kind === "aws") {
+    const AwsIcon = meta.icon;
+    iconNode = (
+      <span
+        className="inline-flex h-[1.1rem] w-[1.1rem] shrink-0 overflow-hidden rounded-[3px] [&>svg]:h-full [&>svg]:w-full"
         aria-hidden
-      />
+      >
+        <AwsIcon />
+      </span>
+    );
+  } else if (meta?.kind === "react-icon") {
+    const Icon = meta.icon;
+    iconNode = (
+      <Icon style={{ color }} className="shrink-0" size={15} aria-hidden />
+    );
+  } else {
+    iconNode = (
+      <FiBox style={{ color }} className="shrink-0" size={15} aria-hidden />
+    );
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-surface0 border border-surface1 rounded-md px-2.5 py-1 text-fg transition-all hover:bg-surface1 hover:border-surface2 hover:-translate-y-0.5 select-none">
+      {iconNode}
       {name}
     </span>
   );

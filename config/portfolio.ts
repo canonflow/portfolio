@@ -23,13 +23,32 @@ export const portfolioData = {
   versionControl: ["Github", "Bit Bucket"],
   tools: ["Insomnia", "Notion", "Jira", "Confluence"],
 
+  awsServices: [
+    "EC2",
+    "ECS",
+    "Lambda",
+    "S3",
+    "RDS",
+    "DynamoDB",
+    "SQS",
+    "SNS",
+    "EventBridge",
+    "Step Functions",
+    "CloudWatch",
+    "API Gateway",
+    "Cloud Map",
+    "ALB",
+    "IAM Role",
+    "IAM Policy",
+  ],
+
   projects: [
     {
       name: "Golang Queue",
       description:
         "A Laravel-style, type-safe job queue for Go with typed job dispatch, pluggable backend drivers (Redis Streams), retries with backoff, delayed jobs, chaining, batching, and middleware.",
       tech: ["Golang", "Redis", "Generics"],
-      link: "https://github.com/canonflow/golang-queue"
+      link: "https://github.com/canonflow/golang-queue",
     },
     {
       name: "Backend Starter - Modular Monolith",
