@@ -5,7 +5,7 @@ export const portfolioData = {
   github: "https://github.com/canonflow",
   linkedin: "https://linkedin.com/in/nathan-garzya-santoso-3209bb212",
   resume: "/resume.pdf",
-  version: "v2.0.0",
+  version: "v2.1.0",
 
   about: `
   Hi There, I'm Nathan Garzya Santoso, a Software Engineer with a strong interest in Backend Engineering, Distributed Systems, and Scalable Architecture.\n
