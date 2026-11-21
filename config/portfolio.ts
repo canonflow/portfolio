@@ -40,6 +40,7 @@ export const portfolioData = {
     "ALB",
     "IAM Role",
     "IAM Policy",
+    "SES",
   ],
 
   projects: [

@@ -36,6 +36,7 @@ import {
   AmazonElasticContainerService,
   AwsLambda,
   AmazonSimpleStorageService,
+  AmazonSimpleEmailService,
   AmazonRds,
   AmazonDynamoDb,
   AmazonSimpleQueueService,
@@ -124,6 +125,7 @@ const awsServiceIcons: Record<string, IconMeta> = {
   ALB: { kind: "aws", icon: ElasticLoadBalancingApplicationLoadBalancer },
   "IAM Role": { kind: "aws", icon: AwsIdentityAccessManagementRole },
   "IAM Policy": { kind: "aws", icon: AwsIdentityAccessManagementPermissions },
+  SES: { kind: "aws", icon: AmazonSimpleEmailService },
 };
 
 export default function Terminal() {
